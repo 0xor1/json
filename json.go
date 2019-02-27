@@ -306,8 +306,9 @@ func (j *Json) Set(val interface{}, path ...interface{}) error {
 }
 
 // MustSet is a call to Set with a panic on none nil error
-func (j *Json) MustSet(val interface{}, path ...interface{}) {
+func (j *Json) MustSet(val interface{}, path ...interface{}) *Json {
 	panic.IfNotNil(j.Set(val, path...))
+	return j
 }
 
 // Del modifies `Json` maps and slices by deleting/removing the last `path` segment if it is present,
