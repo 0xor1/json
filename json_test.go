@@ -255,15 +255,15 @@ func Test_Set_WithMapKey(t *testing.T) {
 	obj, err := FromString(`{"a":[{},{"b":[[],{},{"c":"got it!"}]}]}`)
 	a.Nil(err, "err is nil")
 
-	err = obj.Set("set it!", "a", 1, "b", 2, "d")
+	err = obj.Set("a", 1, "b", 2, "d", "set it!")
 	a.Nil(err, "err is nil")
-	obj.MustSet("set it!", "a", 1, "b", 2, "d")
+	obj.MustSet("a", 1, "b", 2, "d", "set it!")
 
 	str, err := obj.ToString()
 	a.Nil(err, "err is nil")
 	a.Equal(`{"a":[{},{"b":[[],{},{"c":"got it!","d":"set it!"}]}]}`, str, "str is correct value")
 
-	obj.Set(nil, "a")
+	obj.Set("a", nil)
 }
 
 func Test_Set_Empty(t *testing.T) {
@@ -300,7 +300,7 @@ func Test_Set_NestedNonExistantMaps(t *testing.T) {
 	obj, err := FromString(`{}`)
 	a.Nil(err, "err is nil")
 
-	err = obj.Set(true, "a", "b", "c")
+	err = obj.Set("a", "b", "c", true)
 	a.Nil(err, "err is nil")
 
 	str, err := obj.ToString()
@@ -314,7 +314,7 @@ func Test_Set_WithInappropriateMapKey(t *testing.T) {
 	obj, err := FromString(`{"a":true}`)
 	a.Nil(err, "err is nil")
 
-	pathErr := obj.Set(true, "a", "b")
+	pathErr := obj.Set("a", "b", true)
 	a.NotNil(pathErr, "err is not nil")
 	a.Equal([]interface{}{"a"}, pathErr.(*jsonPathError).FoundPath, "error FoundPath is correct")
 	a.Equal([]interface{}{"b"}, pathErr.(*jsonPathError).MissingPath, "error FoundPath is correct")
@@ -330,7 +330,7 @@ func Test_Set_WithSliceIndex(t *testing.T) {
 	obj, err := FromString(`{"a":[null]}`)
 	a.Nil(err, "err is nil")
 
-	err = obj.Set(true, "a", 0)
+	err = obj.Set("a", 0, true)
 	a.Nil(err, "err is nil")
 
 	str, err := obj.ToString()
@@ -344,7 +344,7 @@ func Test_Set_WithInappropriateSliceIndex(t *testing.T) {
 	obj, err := FromString(`{"a":[]}`)
 	a.Nil(err, "err is nil")
 
-	pathErr := obj.Set(true, "a", 0)
+	pathErr := obj.Set("a", 0, true)
 	a.NotNil(pathErr, "err is not nil")
 	a.Equal([]interface{}{"a"}, pathErr.(*jsonPathError).FoundPath, "error FoundPath is correct")
 	a.Equal([]interface{}{0}, pathErr.(*jsonPathError).MissingPath, "error FoundPath is correct")
@@ -360,7 +360,7 @@ func Test_Set_WithInappropriatePathValue(t *testing.T) {
 	obj, err := FromString(`{"a":[]}`)
 	a.Nil(err, "err is nil")
 
-	pathErr := obj.Set(true, "a", true)
+	pathErr := obj.Set( "a", true, true)
 	a.NotNil(pathErr, "err is not nil")
 	a.Equal([]interface{}{"a"}, pathErr.(*jsonPathError).FoundPath, "error FoundPath is correct")
 	a.Equal([]interface{}{true}, pathErr.(*jsonPathError).MissingPath, "error FoundPath is correct")

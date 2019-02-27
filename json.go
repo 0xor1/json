@@ -263,7 +263,13 @@ func (j *Json) MustGet(path ...interface{}) *Json {
 // Set will only create maps where the current map[key] does not exist,
 // if the key exists, even if the value is nil, a new map will not be created and an
 // error wil be returned.
-func (j *Json) Set(val interface{}, path ...interface{}) error {
+//		j.Set("my", "path", 1, "to-the", "property", value)
+func (j *Json) Set(pathPartsThenValue ...interface{}) error {
+	if len(pathPartsThenValue) == 0 {
+		return fmt.Errorf("no value supplied")
+	}
+	path := pathPartsThenValue[:len(pathPartsThenValue) - 1]
+	val := pathPartsThenValue[len(pathPartsThenValue) - 1]
 	if len(path) == 0 {
 		j.data = val
 		return nil
@@ -306,8 +312,8 @@ func (j *Json) Set(val interface{}, path ...interface{}) error {
 }
 
 // MustSet is a call to Set with a panic on none nil error
-func (j *Json) MustSet(val interface{}, path ...interface{}) *Json {
-	panic.IfNotNil(j.Set(val, path...))
+func (j *Json) MustSet(pathPartsThenValue ...interface{}) *Json {
+	panic.IfNotNil(j.Set(pathPartsThenValue...))
 	return j
 }
 
